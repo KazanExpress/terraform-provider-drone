@@ -3,6 +3,7 @@ package drone
 import (
 	"fmt"
 	"regexp"
+	"strings"
 
 	"github.com/Lucretius/terraform-provider-drone/drone/utils"
 	"github.com/drone/drone-go/drone"
@@ -123,7 +124,11 @@ func resourceSecretExists(data *schema.ResourceData, meta interface{}) (bool, er
 
 	secret, err := client.Secret(owner, repo, name)
 	if err != nil {
-		return false, fmt.Errorf("failed to read Drone Secret: %s/%s/%s", owner, repo, name)
+		if isNotFoundErr(err) {
+			return false, nil
+		}
+
+		return false, fmt.Errorf("failed to read Drone Secret pz: %s/%s/%s", owner, repo, name)
 	}
 
 	exists := secret.Name == name
@@ -153,4 +158,8 @@ func readSecret(data *schema.ResourceData, owner, repo string, secret *drone.Sec
 	data.Set("allow_on_pull_request", secret.PullRequest)
 
 	return nil
+}
+
+func isNotFoundErr(err error) bool {
+	return strings.Contains(err.Error(), "error 404")
 }

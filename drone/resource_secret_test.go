@@ -30,6 +30,11 @@ func testSecretConfigBasic(user, repo, name, value string) string {
 }
 
 func TestSecret(t *testing.T) {
+
+	const repo = "hook-test"
+	const secretName = "password"
+	const secretValue = "1234567890"
+
 	resource.Test(t, resource.TestCase{
 		PreCheck:     func() { testAccPreCheck(t) },
 		Providers:    testProviders,
@@ -38,9 +43,9 @@ func TestSecret(t *testing.T) {
 			{
 				Config: testSecretConfigBasic(
 					testDroneUser,
-					"hook-test",
-					"password",
-					"1234567890",
+					repo,
+					secretName,
+					secretValue,
 				),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr(
@@ -51,12 +56,44 @@ func TestSecret(t *testing.T) {
 					resource.TestCheckResourceAttr(
 						"drone_secret.secret",
 						"name",
-						"password",
+						secretName,
 					),
 					resource.TestCheckResourceAttr(
 						"drone_secret.secret",
 						"value",
-						"1234567890",
+						secretValue,
+					),
+				),
+			},
+			{
+				PreConfig: func() {
+					client := testProvider.Meta().(drone.Client)
+
+					client.SecretDelete(testDroneUser, repo, secretName)
+				},
+
+				Config: testSecretConfigBasic(
+					testDroneUser,
+					repo,
+					secretName,
+					secretValue,
+				),
+
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttr(
+						"drone_secret.secret",
+						"repository",
+						fmt.Sprintf("%s/hook-test", testDroneUser),
+					),
+					resource.TestCheckResourceAttr(
+						"drone_secret.secret",
+						"name",
+						secretName,
+					),
+					resource.TestCheckResourceAttr(
+						"drone_secret.secret",
+						"value",
+						secretValue,
 					),
 				),
 			},
