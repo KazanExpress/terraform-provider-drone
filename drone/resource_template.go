@@ -11,7 +11,7 @@ import (
 const templateNameProperty string = "name"
 const templateNamespaceProperty string = "namespace"
 const templateDataProperty string = "data"
-const templateResourceIdExample = "KazanExpress/go_service.yaml"
+const templateNameExample = "go_service.yaml"
 
 func resourceTemplate() *schema.Resource {
 	return &schema.Resource{
@@ -63,7 +63,7 @@ func resourceTemplateCreate(data *schema.ResourceData, meta interface{}) error {
 func resourceTemplateUpdate(data *schema.ResourceData, meta interface{}) error {
 	client := meta.(drone.Client)
 
-	namespace, templateName, err := utils.ParseOrgId(data.Id(), templateResourceIdExample)
+	namespace, templateName, err := utils.ParseOrgId(data.Id(), templateNameExample)
 	if err != nil {
 		return err
 	}
@@ -82,7 +82,7 @@ func resourceTemplateUpdate(data *schema.ResourceData, meta interface{}) error {
 func resourceTemplateRead(data *schema.ResourceData, meta interface{}) error {
 	client := meta.(drone.Client)
 
-	namespace, templateName, err := utils.ParseOrgId(data.Id(), templateResourceIdExample)
+	namespace, templateName, err := utils.ParseOrgId(data.Id(), templateNameExample)
 	if err != nil {
 		return err
 	}
@@ -100,7 +100,7 @@ func resourceTemplateRead(data *schema.ResourceData, meta interface{}) error {
 func resourceTemplateDelete(data *schema.ResourceData, meta interface{}) error {
 	client := meta.(drone.Client)
 
-	namespace, templateName, err := utils.ParseOrgId(data.Id(), templateResourceIdExample)
+	namespace, templateName, err := utils.ParseOrgId(data.Id(), templateNameExample)
 	if err != nil {
 		return err
 	}
@@ -111,7 +111,7 @@ func resourceTemplateDelete(data *schema.ResourceData, meta interface{}) error {
 func resourceTemplateExists(data *schema.ResourceData, meta interface{}) (bool, error) {
 	client := meta.(drone.Client)
 
-	namespace, templateName, err := utils.ParseOrgId(data.Id(), templateResourceIdExample)
+	namespace, templateName, err := utils.ParseOrgId(data.Id(), templateNameExample)
 	if err != nil {
 		return false, err
 	}
