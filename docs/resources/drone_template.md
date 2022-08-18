@@ -8,7 +8,7 @@ Manage an org drone templates.
 resource "drone_template" "go_service.yaml" {
   namespace  = "KazanExpress"
   name       = "go_service.yaml"
-  value      = file(“go_service.yaml”)
+  data      = file(“go_service.yaml”)
 }
 ```
 
