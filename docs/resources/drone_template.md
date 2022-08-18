@@ -5,7 +5,7 @@ Manage an org drone templates.
 ## Example Usage
 
 ```hcl
-resource "drone_template" "go_service.yaml" {
+resource "drone_template" "go_service" {
   namespace  = "KazanExpress"
   name       = "go_service.yaml"
   data      = file(“go_service.yaml”)
